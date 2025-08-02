@@ -1,0 +1,58 @@
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import os
+
+# Pega o TOKEN do Render ou variável local
+TOKEN = os.getenv("TOKEN", "7984880246:AAHl6hcrprel6GLQ5mti6xeioPA0IaGWQSU")
+
+# /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Olá! Me envie /cpf, /telefone, /email ou /nome com o dado para consultar.")
+
+# /cpf
+async def cpf(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Uso: /cpf 00000000000")
+        return
+    numero = context.args[0]
+    # Simulação de retorno
+    resultado = f"📄 Consulta CPF {numero}:\nNome: João da Silva\nSituação: Regular"
+    await update.message.reply_text(resultado)
+
+# /telefone
+async def telefone(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Uso: /telefone 11999999999")
+        return
+    numero = context.args[0]
+    resultado = f"📞 Consulta Telefone {numero}:\nOperadora: Vivo\nCidade: São Paulo"
+    await update.message.reply_text(resultado)
+
+# /email
+async def email(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Uso: /email exemplo@email.com")
+        return
+    endereco = context.args[0]
+    resultado = f"📧 Consulta Email {endereco}:\nStatus: Ativo\nProvedor: Gmail"
+    await update.message.reply_text(resultado)
+
+# /nome
+async def nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Uso: /nome João Silva")
+        return
+    nome_consulta = " ".join(context.args)
+    resultado = f"👤 Consulta Nome {nome_consulta}:\nCPF: 000.000.000-00\nCidade: Rio de Janeiro"
+    await update.message.reply_text(resultado)
+
+# Configuração do bot
+app = ApplicationBuilder().token(TOKEN).build()
+
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("cpf", cpf))
+app.add_handler(CommandHandler("telefone", telefone))
+app.add_handler(CommandHandler("email", email))
+app.add_handler(CommandHandler("nome", nome))
+
+app.run_polling()
